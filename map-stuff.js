@@ -16,39 +16,63 @@ var marker = L.marker([47.30903424774781, -53.173828125]).addTo(nlmap);
 
 //Company Class
 class Company {
-    constructor(shortName, name, city, image, facebook, linkedin, website, coordinates) {
+    constructor(shortName, name, city, image, facebook, linkedin, website, address, coordinates) {
         this.shortName = shortName;
         this.name = name;
         this.city = city;
         this.image = image;
         this.facebook = facebook;
         this.linkedin = linkedin;
-        this.coordinates = coordinates;
         this.website = website;
+        this.address = address;
+        this.coordinates = coordinates;
     }
 }
 
 //Company list
-const apiKey = "fe4e67f7008701edf3ef49fe0bb35b08";
+const crunchbaseAPI = "fe4e67f7008701edf3ef49fe0bb35b08";
+const hereAPI = "qbko57hPdv-u1RzIiS90A3FrgpELCH-DzjG7E3MbJNg";
 const companyLocation = "newfoundland";
-companyNames = ["colab", "rally", "mysa", "breathsuite", "verafin", "clearrisk", "heyorca", "vision33", "Mentic", "celtx","radient360"];
+companyNames = [
+    {name: "colab", address: "251 E White Hills Rd, St. John's, NL A1A 5N8"}, 
+    {name: "mysa", address: "34 Harvey Rd #302, St. John's, NL A1C 2G1"},
+    {name: "verafin", address: "18 Hebron Way, St. John's, NL A1A 0L9"},
+    {name: "clearrisk", address: "5 Hallett Crescent, St. John's, NL A1B 4C4"},
+    {name: "heyorca", address: "261 Kenmount Rd, St. John's, NL A1B 3P9"},
+    {name: "mentic", address: "Memorial University, Genesis, Box 4200, St. John's, NL A1C 5S7"},
+    {name: "celtx", address: "354 Water St, St. John's, NL A1C 1C4"},
+    {name: "radient360", address: "99 Airport Rd, St. John's, NL A1A 4Y3"},
+    {name: "subc", address: "327 Memorial Dr, Clarenville, NL A5A 1R8"},
+    {name: "kraken", address: "189 Glencoe Dr, Mount Pearl, NL A1N 4S8"}
+];
+
 companies = []
-for(let i = 0; i <= companyNames.length; i++) {
-    let crunchbaseData = "https://api.crunchbase.com/v3.1/odm-organizations?user_key=" + apiKey + "&name=" + companyNames[i] + "&locations=" + companyLocation;
-        fetch(crunchbaseData)
+for(let i = 0; i < companyNames.length; i++) {
+    let crunchbaseData = "https://api.crunchbase.com/v3.1/odm-organizations?user_key=" + crunchbaseAPI + "&name=" + companyNames[i].name + "&locations=" + companyLocation;
+    fetch(crunchbaseData)
         .then(response => response.json())
         .then(function(data) {
-            let properties = data.data.items[0].properties;
-            const shortName = companyNames[i];
+            const properties = data.data.items[0].properties;
+            const shortName = companyNames[i].name;
             const name = properties.name;
-            const city = properties.city;
+            const city = properties.city_name;
             const image = properties.profile_image_url;
             const facebook = properties.facebook_url;
             const linkedin = properties.linkedin_url;
             const website = properties.domain;
-            companies.push(new Company(shortName, name, city, image, facebook, linkedin, website));
+            const address = companyNames[i].address;
+            
+            let hereData = "https://geocoder.ls.hereapi.com/6.2/geocode.json?apiKey=" + hereAPI + "&searchtext=" + companyNames[i].address; 
+            fetch(hereData)
+            .then(response => response.json())
+            .then(function(data) {
+                coordinatesObject = data.Response.View[0].Result[0].Location.NavigationPosition[0];
+                const companyCords = [coordinatesObject.Latitude, coordinatesObject.Longitude];
+                let company = new Company(shortName, name, city, image, facebook, linkedin, website, address, companyCords)
+                companies.push(company);
+            });
+
         });
-    
 }
 
 console.log(companies);
