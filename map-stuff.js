@@ -13,3 +13,42 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 //Putting icons on map
 var marker = L.marker([47.30903424774781, -53.173828125]).addTo(nlmap);
+
+//Company Class
+class Company {
+    constructor(shortName, name, city, image, facebook, linkedin, website, coordinates) {
+        this.shortName = shortName;
+        this.name = name;
+        this.city = city;
+        this.image = image;
+        this.facebook = facebook;
+        this.linkedin = linkedin;
+        this.coordinates = coordinates;
+        this.website = website;
+    }
+}
+
+//Company list
+const apiKey = "fe4e67f7008701edf3ef49fe0bb35b08";
+const companyLocation = "newfoundland";
+companyNames = ["colab", "rally", "mysa", "breathsuite", "verafin", "clearrisk", "heyorca", "vision33", "Mentic", "celtx","radient360"];
+companies = []
+for(let i = 0; i <= companyNames.length; i++) {
+    let crunchbaseData = "https://api.crunchbase.com/v3.1/odm-organizations?user_key=" + apiKey + "&name=" + companyNames[i] + "&locations=" + companyLocation;
+        fetch(crunchbaseData)
+        .then(response => response.json())
+        .then(function(data) {
+            let properties = data.data.items[0].properties;
+            const shortName = companyNames[i];
+            const name = properties.name;
+            const city = properties.city;
+            const image = properties.profile_image_url;
+            const facebook = properties.facebook_url;
+            const linkedin = properties.linkedin_url;
+            const website = properties.domain;
+            companies.push(new Company(shortName, name, city, image, facebook, linkedin, website));
+        });
+    
+}
+
+console.log(companies);
