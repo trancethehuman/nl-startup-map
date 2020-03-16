@@ -78,7 +78,7 @@ class CompanyInfo {
                             if(companyNames[i].type == "company"){
                                 companies.push(new Company(shortName, name, city, image, facebook, linkedin, website, address, companyCords, description));    
                             } else {
-                                companies.push(new Incubator(shortName, name, city, image, facebook, linkedin, website, address, companyCords, description, companyNames.members));
+                                companies.push(new Incubator(shortName, name, city, image, facebook, linkedin, website, address, companyCords, description, companyNames[i].members));
                             }
                             
                         });
@@ -110,8 +110,8 @@ class Company {
 };
 
 class Incubator extends Company {
-    constructor(shortName, name, city, image, facebook, linkedin, website, address, coordinates, members) {
-        super(shortName, name, city, image, facebook, linkedin, website, address, coordinates);
+    constructor(shortName, name, city, image, facebook, linkedin, website, address, coordinates, description, members) {
+        super(shortName, name, city, image, facebook, linkedin, website, address, coordinates, description);
         this.members = members;
     }
 }
@@ -122,7 +122,7 @@ function generateCompanyProfiles() {
     return new Promise(resolve => {
         setTimeout(() => {
             resolve(companies.companyList);
-        }, 600);
+        }, 2000);
     });
 }
 
