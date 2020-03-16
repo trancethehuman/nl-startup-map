@@ -133,8 +133,10 @@ function getIndividualCompany(companies, i) {
 
 async function markingMap() {
     companiesList = await generateCompanyProfiles();
+    console.groupCollapsed("Successful companies retrieved from API");
     console.table(companiesList, ["name", "website", "coordinates"]);
-    console.groupCollapsed("Invidual companies/incubators that went through");
+    console.groupEnd();
+    console.groupCollapsed("Invidual companies/incubators currently on the map");
     for (let i = 0; i < companiesList.length; i++) {
         console.log(getIndividualCompany(companiesList, i));
         L.marker(getIndividualCompany(companiesList, i).coordinates).addTo(nlmap);
