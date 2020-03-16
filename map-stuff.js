@@ -133,7 +133,7 @@ function getIndividualCompany(companies, i) {
 
 async function markingMap() {
     companiesList = await generateCompanyProfiles();
-    console.groupCollapsed("Successful companies retrieved from API");
+    console.groupCollapsed("Companies successfully retrieved from API");
     console.table(companiesList, ["name", "website", "coordinates"]);
     console.groupEnd();
     console.groupCollapsed("Invidual companies/incubators currently on the map");
