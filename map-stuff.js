@@ -11,11 +11,11 @@ class CompanyDirectory {
             {name: "mentic", address: "Memorial University, Genesis, Box 4200, St. John's, NL A1C 5S7", type:"company"},
             {name: "celtx", address: "354 Water St, St. John's, NL A1C 1C4", type:"company"},
             {name: "radient360", address: "99 Airport Rd, St. John's, NL A1A 4Y3", type:"company"},
-            {name: "subc", address: "327 Memorial Dr, Clarenville, NL A5A 1R8", type:"company"},
             {name: "kraken", address: "189 Glencoe Dr, Mount Pearl, NL A1N 4S8", type:"company"},
             {name: "genesis", address: "100 Signal Hill Rd, St. John's, NL A1A 1B3", type:"incubator", members: ["breathsuite", "rally", "totaliQ", "milk moovement", "fytics", "castr"]},
             {name: "vision33", address: "210 Water St #400, St. John's, NL A1C 1A9", type:"company"},
-            
+            {name: "mentic", address: "Memorial University, Genesis, Box 4200, St. John's, NL A1C 5S7", type:"company"},
+            {name: "hatch", address: "80 Hebron Way #100, St. John's, NL A1A 0L9", type:"company"},
         ];
     }
     static companyLocation() {
@@ -122,7 +122,7 @@ function generateCompanyProfiles() {
     return new Promise(resolve => {
         setTimeout(() => {
             resolve(companies.companyList);
-        }, 500);
+        }, 600);
     });
 }
 
@@ -140,7 +140,7 @@ async function markingMap() {
 }
 
 //Map component
-var nlmap = L.map('map').setView([47.669086647137576, -53.3331298828125], 8);
+var nlmap = L.map('map').setView([47.5626274374099, -52.75703430175781], 11);
 
 //Map Layer
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
