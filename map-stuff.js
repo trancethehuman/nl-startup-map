@@ -16,6 +16,7 @@ class CompanyDirectory {
             {name: "vision33", address: "210 Water St #400, St. John's, NL A1C 1A9", type:"company"},
             {name: "mentic", address: "Memorial University, Genesis, Box 4200, St. John's, NL A1C 5S7", type:"company"},
             {name: "hatch", address: "80 Hebron Way #100, St. John's, NL A1A 0L9", type:"company"},
+            {name: "bluedrop", address: "18 Prescott Street, St. John's, NL A1C 3S4", type:"company"},
         ];
     }
     static companyLocation() {
@@ -132,11 +133,13 @@ function getIndividualCompany(companies, i) {
 
 async function markingMap() {
     companiesList = await generateCompanyProfiles();
-    console.log(companiesList)
+    console.table(companiesList, ["name", "website", "coordinates"]);
+    console.groupCollapsed("Invidual companies/incubators that went through");
     for (let i = 0; i < companiesList.length; i++) {
         console.log(getIndividualCompany(companiesList, i));
         L.marker(getIndividualCompany(companiesList, i).coordinates).addTo(nlmap);
     } 
+    console.groupEnd();
 }
 
 //Map component
