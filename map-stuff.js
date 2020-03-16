@@ -1,4 +1,3 @@
-//Company list
 class CompanyDirectory {
     constructor() {
     }
@@ -36,7 +35,7 @@ class CompanyInfo {
     constructor() {
         this.companyList = [];
     }
-    static pullingData(companyNames, companies, companyLocation, crunchbaseAPI, hereAPI) {
+    static apiDataGenerating(companyNames, companies, companyLocation, crunchbaseAPI, hereAPI) {
         for(let i = 0; i < companyNames.length; i++) {
             let crunchbaseData = "https://api.crunchbase.com/v3.1/odm-organizations?user_key=" + crunchbaseAPI + "&name=" + companyNames[i].name + "&locations=" + companyLocation;
             fetch(crunchbaseData)
@@ -83,7 +82,7 @@ class Company {
     // putOnMap(map) {
     //     return L.marker(this.coordinates).addTo(map);
     // }
-}
+};
 //Map component
 var nlmap = L.map('map').setView([48.56024979174329, -55.92041015625], 6);
 
@@ -107,14 +106,35 @@ var marker = L.marker([47.30903424774781, -53.173828125]).addTo(nlmap);
 
 // var marker2 = L.marker(companies[0].coordinates).addTo(nlmap);
 
-let companies = new CompanyInfo;
-CompanyInfo.pullingData(CompanyDirectory.companyNames(), companies.companyList, CompanyDirectory.companyLocation(), Api.crunchbaseAPI(), Api.hereAPI());
 
-console.log(CompanyDirectory.companyNames())
-console.log(companies.companyList)
-console.log(CompanyDirectory.companyLocation())
-console.log(Api.crunchbaseAPI())
-console.log(Api.hereAPI())
-console.log(companies.companyList)
+
+function generateCompanyProfiles() {
+    let companies = new CompanyInfo;
+    CompanyInfo.apiDataGenerating(CompanyDirectory.companyNames(), companies.companyList, CompanyDirectory.companyLocation(), Api.crunchbaseAPI(), Api.hereAPI());
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(companies.companyList);
+        }, 500);
+    });
+}
+
+function getIndividualCompany(companies, i) {
+    return companies[i];
+}
+
+async function markingMap() {
+    companiesList = await generateCompanyProfiles();
+    console.log(companiesList)
+    for (let i = 0; i < companiesList.length; i++) {
+        console.log(getIndividualCompany(companiesList, i));
+        L.marker(getIndividualCompany(companiesList, i).coordinates).addTo(nlmap);
+    } 
+}
+
+markingMap();
+
+// console.log(generateCompanyProfiles())
+
+
 
 
