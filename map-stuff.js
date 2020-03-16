@@ -3,16 +3,19 @@ class CompanyDirectory {
     }
     static companyNames() {
         return [
-            {name: "colab", address: "251 E White Hills Rd, St. John's, NL A1A 5N8"}, 
-            {name: "mysa", address: "34 Harvey Rd #302, St. John's, NL A1C 2G1"},
-            {name: "verafin", address: "18 Hebron Way, St. John's, NL A1A 0L9"},
-            {name: "clearrisk", address: "5 Hallett Crescent, St. John's, NL A1B 4C4"},
-            {name: "heyorca", address: "261 Kenmount Rd, St. John's, NL A1B 3P9"},
-            {name: "mentic", address: "Memorial University, Genesis, Box 4200, St. John's, NL A1C 5S7"},
-            {name: "celtx", address: "354 Water St, St. John's, NL A1C 1C4"},
-            {name: "radient360", address: "99 Airport Rd, St. John's, NL A1A 4Y3"},
-            {name: "subc", address: "327 Memorial Dr, Clarenville, NL A5A 1R8"},
-            {name: "kraken", address: "189 Glencoe Dr, Mount Pearl, NL A1N 4S8"}
+            {name: "colab", address: "251 E White Hills Rd, St. John's, NL A1A 5N8", type:"company"}, 
+            {name: "mysa", address: "34 Harvey Rd #302, St. John's, NL A1C 2G1", type:"company"},
+            {name: "verafin", address: "18 Hebron Way, St. John's, NL A1A 0L9", type:"company"},
+            {name: "clearrisk", address: "5 Hallett Crescent, St. John's, NL A1B 4C4", type:"company"},
+            {name: "heyorca", address: "261 Kenmount Rd, St. John's, NL A1B 3P9", type:"company"},
+            {name: "mentic", address: "Memorial University, Genesis, Box 4200, St. John's, NL A1C 5S7", type:"company"},
+            {name: "celtx", address: "354 Water St, St. John's, NL A1C 1C4", type:"company"},
+            {name: "radient360", address: "99 Airport Rd, St. John's, NL A1A 4Y3", type:"company"},
+            {name: "subc", address: "327 Memorial Dr, Clarenville, NL A5A 1R8", type:"company"},
+            {name: "kraken", address: "189 Glencoe Dr, Mount Pearl, NL A1N 4S8", type:"company"},
+            {name: "genesis", address: "100 Signal Hill Rd, St. John's, NL A1A 1B3", type:"incubator", members: ["breathsuite", "rally", "totaliQ", "milk moovement", "fytics", "castr"]},
+            {name: "vision33", address: "210 Water St #400, St. John's, NL A1C 1A9", type:"company"},
+            
         ];
     }
     static companyLocation() {
@@ -41,25 +44,46 @@ class CompanyInfo {
             fetch(crunchbaseData)
                 .then(response => response.json())
                 .then(function(data) {
-                    const properties = data.data.items[0].properties;
-                    const shortName = companyNames[i].name;
-                    const name = properties.name;
-                    const city = properties.city_name;
-                    const image = properties.profile_image_url;
-                    const facebook = properties.facebook_url;
-                    const linkedin = properties.linkedin_url;
-                    const website = properties.domain;
-                    const address = companyNames[i].address;
+                    if(data.data.paging.total_items == 0){
+                        let hereData = "https://geocoder.ls.hereapi.com/6.2/geocode.json?apiKey=" + hereAPI + "&searchtext=" + companyNames[i].address; 
+                        fetch(hereData)
+                        .then(response => response.json())
+                        .then(function(data) {
+                            const coordinatesObject = data.Response.View[0].Result[0].Location.NavigationPosition[0];
+                            const companyCords = [coordinatesObject.Latitude, coordinatesObject.Longitude];
+                            if(companyNames[i].type == "company"){
+                                companies.push(new Company(companyNames[i].name, companyNames[i].name, null, null, null, null, null, companyNames[i].address, companyCords, null));
+                            } else {
+                                companies.push(new Incubator(companyNames[i].name, companyNames[i].name, null, null, null, null, null, companyNames[i].address, companyCords, null, companyNames[i].members));
+                            }
+                        });
+                    } else {
+                        const properties = data.data.items[0].properties;
+                        const shortName = companyNames[i].name;
+                        const name = properties.name;
+                        const city = properties.city_name;
+                        const image = properties.profile_image_url;
+                        const facebook = properties.facebook_url;
+                        const linkedin = properties.linkedin_url;
+                        const website = properties.domain;
+                        const address = companyNames[i].address;
+                        const description = properties.short_description;
+                        
+                        let hereData = "https://geocoder.ls.hereapi.com/6.2/geocode.json?apiKey=" + hereAPI + "&searchtext=" + companyNames[i].address; 
+                        fetch(hereData)
+                        .then(response => response.json())
+                        .then(function(data) {
+                            const coordinatesObject = data.Response.View[0].Result[0].Location.NavigationPosition[0];
+                            const companyCords = [coordinatesObject.Latitude, coordinatesObject.Longitude];
+                            if(companyNames[i].type == "company"){
+                                companies.push(new Company(shortName, name, city, image, facebook, linkedin, website, address, companyCords, description));    
+                            } else {
+                                companies.push(new Incubator(shortName, name, city, image, facebook, linkedin, website, address, companyCords, description, companyNames.members));
+                            }
+                            
+                        });
+                    }
                     
-                    let hereData = "https://geocoder.ls.hereapi.com/6.2/geocode.json?apiKey=" + hereAPI + "&searchtext=" + companyNames[i].address; 
-                    fetch(hereData)
-                    .then(response => response.json())
-                    .then(function(data) {
-                        const coordinatesObject = data.Response.View[0].Result[0].Location.NavigationPosition[0];
-                        const companyCords = [coordinatesObject.Latitude, coordinatesObject.Longitude];
-                        let company = new Company(shortName, name, city, image, facebook, linkedin, website, address, companyCords)
-                        companies.push(company);
-                    });
         
                 });
         }
@@ -68,7 +92,7 @@ class CompanyInfo {
 };
 
 class Company {
-    constructor(shortName, name, city, image, facebook, linkedin, website, address, coordinates) {
+    constructor(shortName, name, city, image, facebook, linkedin, website, address, coordinates, description) {
         this.shortName = shortName;
         this.name = name;
         this.city = city;
@@ -78,35 +102,19 @@ class Company {
         this.website = website;
         this.address = address;
         this.coordinates = coordinates;
+        this.description = description;
     }
     // putOnMap(map) {
     //     return L.marker(this.coordinates).addTo(map);
     // }
 };
-//Map component
-var nlmap = L.map('map').setView([48.56024979174329, -55.92041015625], 6);
 
-//Map Layer
-L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox/streets-v11',
-    tileSize: 512,
-    zoomOffset: -1,
-    accessToken: 'pk.eyJ1IjoidGhhbmdoYWltZW93IiwiYSI6ImNrN2MydzFzeTAwNDQzZW1jZDEzNjhwb2QifQ.nD9ibuY2wFeARFb97sgleA'
-}).addTo(nlmap);
-
-
-//Putting icons on map
-
-var marker = L.marker([47.30903424774781, -53.173828125]).addTo(nlmap);
-// for (let i = 0; i <companies.length; i++) {
-//     companies[i].putOnMap(nlmap);
-// }
-
-// var marker2 = L.marker(companies[0].coordinates).addTo(nlmap);
-
-
+class Incubator extends Company {
+    constructor(shortName, name, city, image, facebook, linkedin, website, address, coordinates, members) {
+        super(shortName, name, city, image, facebook, linkedin, website, address, coordinates);
+        this.members = members;
+    }
+}
 
 function generateCompanyProfiles() {
     let companies = new CompanyInfo;
@@ -131,10 +139,20 @@ async function markingMap() {
     } 
 }
 
+//Map component
+var nlmap = L.map('map').setView([47.669086647137576, -53.3331298828125], 8);
+
+//Map Layer
+L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'pk.eyJ1IjoidGhhbmdoYWltZW93IiwiYSI6ImNrN2MydzFzeTAwNDQzZW1jZDEzNjhwb2QifQ.nD9ibuY2wFeARFb97sgleA'
+}).addTo(nlmap);
+
 markingMap();
-
-// console.log(generateCompanyProfiles())
-
 
 
 
