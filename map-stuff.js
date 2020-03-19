@@ -17,7 +17,6 @@ class CompanyDirectory {
             {name: "mentic", address: "Memorial University, Genesis, Box 4200, St. John's, NL A1C 5S7", type:"company"},
             {name: "hatch", address: "80 Hebron Way #100, St. John's, NL A1A 0L9", type:"company"},
             {name: "bluedrop", address: "18 Prescott Street, St. John's, NL A1C 3S4", type:"company"},
-            {name: "clockwork", address: "34 Harvey Rd #202, St. John's, NL A1C 2G1", type:"company"},
             {name: "avalon", address: "240 Waterford Bridge Rd Suite 200, St. John's, NL A1E 1E2", type:"company"},
             {name: "compusult", address: "40 Bannister St, Mount Pearl, NL A1N 1W1", type:"company"},
             {name: "genoa", address: "15 Dundee Ave, Mount Pearl, NL A1N 4R6", type:"company"},
