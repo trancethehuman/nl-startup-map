@@ -142,8 +142,48 @@ async function markingMap() {
     console.groupEnd();
     console.groupCollapsed("Invidual companies/incubators currently on the map");
     for (let i = 0; i < companiesList.length; i++) {
-        console.log(getIndividualCompany(companiesList, i));
-        L.marker(getIndividualCompany(companiesList, i).coordinates).addTo(nlmap);
+        individualCompany = getIndividualCompany(companiesList, i);
+        console.log(individualCompany);
+        let x = L.marker(individualCompany.coordinates).addTo(nlmap);
+        let name = "<h1>" + individualCompany.name + "</h1>";
+        let description = "";
+        let image = "";
+        let facebook = "";
+        let linkedin = "";
+        let website = "";
+        let address = "";
+        if (individualCompany.address != null) {
+            address = "<p>" + "Address: " + individualCompany.address + "<\p>";
+        } else {
+            address = "No address available.";
+        }
+        if (individualCompany.facebook != null) {
+            facebook = "<a href='" + individualCompany.facebook + "'>Facebook</a>";
+        } else {
+            facebook = "No facebook available.";
+        }
+        if (individualCompany.linkedin != null) {
+            linkedin = "<a href='" + individualCompany.linkedin + "'>LinkedIn</a>";
+        } else {
+            linkedin = "No LinkedIn available.";
+        }
+        if (individualCompany.website != null) {
+            website =  "<a href='http://" + individualCompany.website + "'>Website</a>";
+        } else {
+            website = "No website available.";
+        }
+        if (individualCompany.image != null) {
+            image = "<img src='" + individualCompany.image + "'alt='logo' width='80'>";
+        } else {
+            image = "No logo available.";
+        }
+        if(individualCompany.description != null) {
+            description = "<p>" + individualCompany.description + "</p>";
+        } else {
+            description = "No descriptions available.";
+        }
+        let info = name + image + description + address + website + "<br>" + facebook + "<br>" + linkedin;
+        x.bindPopup(info);
     } 
     console.groupEnd();
 }
