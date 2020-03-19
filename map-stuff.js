@@ -20,7 +20,8 @@ class CompanyDirectory {
             {name: "avalon", address: "240 Waterford Bridge Rd Suite 200, St. John's, NL A1E 1E2", type:"company"},
             {name: "compusult", address: "40 Bannister St, Mount Pearl, NL A1N 1W1", type:"company"},
             {name: "genoa", address: "15 Dundee Ave, Mount Pearl, NL A1N 4R6", type:"company"},
-            {name: "nocland", address: "187 Kenmount Road St. John's, NL, Canada", type:"company"}
+            {name: "nocland", address: "187 Kenmount Road St. John's, NL, Canada", type:"company"},
+            {name: "skyhawk", address: "238 Torbay Road, St. John's, NL, A1A 2H4, Canada", type:"company"}
         ];
     }
     static companyLocation() {
