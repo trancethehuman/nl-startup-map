@@ -153,6 +153,15 @@ async function markingMap() {
         let linkedin = "";
         let website = "";
         let address = "";
+        let group = "<h3>Members in this incubator:</h3>";
+        let info = "";
+        if (individualCompany instanceof Incubator){
+            console.log("incubator spotted")
+            for(let z = 0; z < individualCompany.members.length; z++) {
+                group += ("<li>" + individualCompany.members[z] + "</li>");
+                console.log("incubator member added successfully")
+            }
+        }
         if (individualCompany.address != null) {
             address = "<p>" + "Address: " + individualCompany.address + "<\p>";
         } else {
@@ -183,7 +192,11 @@ async function markingMap() {
         } else {
             description = "No descriptions available.";
         }
-        let info = name + image + description + address + website + "<br>" + facebook + "<br>" + linkedin;
+        if(individualCompany instanceof Incubator) {
+            info = name + image + description + group + address + website + "<br>" + facebook + "<br>" + linkedin;
+        } else {
+            info = name + image + description + address + website + "<br>" + facebook + "<br>" + linkedin;
+        }
         x.bindPopup(info);
     } 
     console.groupEnd();
