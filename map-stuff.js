@@ -20,7 +20,8 @@ class CompanyDirectory {
             {name: "clockwork", address: "34 Harvey Rd #202, St. John's, NL A1C 2G1", type:"company"},
             {name: "avalon", address: "240 Waterford Bridge Rd Suite 200, St. John's, NL A1E 1E2", type:"company"},
             {name: "compusult", address: "40 Bannister St, Mount Pearl, NL A1N 1W1", type:"company"},
-            {name: "genoa", address: "15 Dundee Ave, Mount Pearl, NL A1N 4R6", type:"company"}
+            {name: "genoa", address: "15 Dundee Ave, Mount Pearl, NL A1N 4R6", type:"company"},
+            {name: "nocland", address: "187 Kenmount Road St. John's, NL, Canada", type:"company"}
         ];
     }
     static companyLocation() {
