@@ -128,7 +128,7 @@ function generateCompanyProfiles() {
     return new Promise(resolve => {
         setTimeout(() => {
             resolve(companies.companyList);
-        }, 2000);
+        }, 3000);
     });
 }
 
